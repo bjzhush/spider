@@ -432,6 +432,7 @@ class ComposerStaticInitb7cdef64b2e94c3d79a98a05c2979fa7
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\spiderMBD' => __DIR__ . '/../..' . '/app/Console/Commands/spiderMBD.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
