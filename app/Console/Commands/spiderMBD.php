@@ -39,26 +39,30 @@ class spiderMBD extends Command
      */
     public function handle()
     {
+        $rowCount = 0;
         $page = 1;
         $hasNext = true;
         $url = sprintf('https://x.mianbaoduo.com/api/products/?page=%s&limit=20&productstates=1&ordering=-rank&noshow=0', $page);
-        $this->info('next url '.$url);
+        $this->info('next url ' . $url);
         while ($hasNext) {
             $data = $this->fetchJson($url);
 
             $arr = GuzzleHttp\json_decode($data, true);
 
             $rows = $arr['results'];
+            $rowCount += count($rows);
+            $this->info($rowCount . ' rows done');
             foreach ($rows as $row) {
                 $mbdId = $row['id'];
                 $rowData = json_encode($row);
-                $rowCheck = DB::table('mbd')->where('mbd_id', $mbdId)->first();
+                $rowCheck = DB::table('mbd')->where('date', date('Ymd'))->where('mbd_id', $mbdId)->first();
                 if (empty($rowCheck)) {
                     $this->info('inserting id ' . $mbdId);
                     DB::table('mbd')->insert(
                         [
                             'mbd_id' => $mbdId,
                             'data' => $rowData,
+                            'date' => date('Ymd'),
                         ]
                     );
 
@@ -66,6 +70,7 @@ class spiderMBD extends Command
                     $this->info('updating id ' . $mbdId);
                     DB::table('mbd')
                         ->where('mbd_id', $mbdId)
+                        ->where('date', date('Ymd'))
                         ->update([
                             'data' => $rowData,
                         ]);
