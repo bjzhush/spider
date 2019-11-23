@@ -35,7 +35,7 @@ class spiderMBD extends Command
     public function info($string, $verbosity = null)
     {
         file_put_contents('/tmp/spidermbd.log', (string)date('Y-m-d H:i:s') . $string . PHP_EOL, FILE_APPEND);
-        parent::info($string, $verbosity);
+        parent::info((string)date('Y-m-d H:i:s') . $string, $verbosity);
     }
 
     /**
