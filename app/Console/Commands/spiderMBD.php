@@ -51,7 +51,7 @@ class spiderMBD extends Command
 
             $rows = $arr['results'];
             $rowCount += count($rows);
-            $this->info($rowCount . ' rows done');
+            $this->info($rowCount . ' rows processing');
             foreach ($rows as $row) {
                 $mbdId = $row['id'];
                 $rowData = json_encode($row);
