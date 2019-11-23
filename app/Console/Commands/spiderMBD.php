@@ -32,6 +32,12 @@ class spiderMBD extends Command
         parent::__construct();
     }
 
+    public function info($string, $verbosity = null)
+    {
+        file_put_contents('/tmp/spidermbd.log', (string)date('Y-m-d H:i:s') . $string . PHP_EOL, FILE_APPEND);
+        parent::info($string, $verbosity);
+    }
+
     /**
      * Execute the console command.
      *
@@ -87,7 +93,7 @@ class spiderMBD extends Command
                 }
                 $this->info('sleeping 3 to avoid ban');
                 sleep(3);
-            } catch (\Exception $e){
+            } catch (\Exception $e) {
                 $this->info($e->getMessage());
                 $this->info($e->getTraceAsString());
                 $this->dingNotify('shuai 面包多机器人报Exception了,去看看吧');
