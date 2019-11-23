@@ -45,46 +45,55 @@ class spiderMBD extends Command
         $url = sprintf('https://x.mianbaoduo.com/api/products/?page=%s&limit=20&productstates=1&ordering=-rank&noshow=0', $page);
         $this->info('next url ' . $url);
         while ($hasNext) {
-            $data = $this->fetchJson($url);
+            try {
 
-            $arr = GuzzleHttp\json_decode($data, true);
+                $data = $this->fetchJson($url);
 
-            $rows = $arr['results'];
-            $rowCount += count($rows);
-            $this->info($rowCount . ' rows processing');
-            foreach ($rows as $row) {
-                $mbdId = $row['id'];
-                $rowData = json_encode($row);
-                $rowCheck = DB::table('mbd')->where('date', date('Ymd'))->where('mbd_id', $mbdId)->first();
-                if (empty($rowCheck)) {
-                    $this->info('inserting id ' . $mbdId);
-                    DB::table('mbd')->insert(
-                        [
-                            'mbd_id' => $mbdId,
-                            'data' => $rowData,
-                            'date' => date('Ymd'),
-                        ]
-                    );
+                $arr = GuzzleHttp\json_decode($data, true);
 
-                } else {
-                    $this->info('updating id ' . $mbdId);
-                    DB::table('mbd')
-                        ->where('mbd_id', $mbdId)
-                        ->where('date', date('Ymd'))
-                        ->update([
-                            'data' => $rowData,
-                        ]);
+                $rows = $arr['results'];
+                $rowCount += count($rows);
+                $this->info($rowCount . ' rows processing');
+                foreach ($rows as $row) {
+                    $mbdId = $row['id'];
+                    $rowData = json_encode($row);
+                    $rowCheck = DB::table('mbd')->where('date', date('Ymd'))->where('mbd_id', $mbdId)->first();
+                    if (empty($rowCheck)) {
+                        $this->info('inserting id ' . $mbdId);
+                        DB::table('mbd')->insert(
+                            [
+                                'mbd_id' => $mbdId,
+                                'data' => $rowData,
+                                'date' => date('Ymd'),
+                            ]
+                        );
+
+                    } else {
+                        $this->info('updating id ' . $mbdId);
+                        DB::table('mbd')
+                            ->where('mbd_id', $mbdId)
+                            ->where('date', date('Ymd'))
+                            ->update([
+                                'data' => $rowData,
+                            ]);
+                    }
                 }
+                if (strlen($arr['next'])) {
+                    $hasNext = true;
+                    $url = $arr['next'];
+                } else {
+                    $hasNext = false;
+                    $url = '';
+                }
+                $this->info('sleeping 3 to avoid ban');
+                sleep(3);
+            } catch (\Exception $e){
+                $this->info($e->getMessage());
+                $this->info($e->getTraceAsString());
+                $this->dingNotify('shuai 面包多机器人报Exception了,去看看吧');
+
             }
-            if (strlen($arr['next'])) {
-                $hasNext = true;
-                $url = $arr['next'];
-            } else {
-                $hasNext = false;
-                $url = '';
-            }
-            $this->info('sleeping 3 to avoid ban');
-            sleep(3);
+
         }
 
         $this->info('all finished');
@@ -103,4 +112,26 @@ class spiderMBD extends Command
 
         return $clinet->request('GET', $url, ['headers' => $header])->getBody()->getContents();
     }
+
+    public function dingNotify($msg)
+    {
+        $webhook = "https://oapi.dingtalk.com/robot/send?access_token=1614c3faa6c1bf292978867cdf4764e7124d281800dcb267854742a0744118ec";
+        $data = array('msgtype' => 'text', 'text' => array('content' => $msg));
+        $data_string = json_encode($data);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $webhook);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=utf-8'));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // 线下环境不用开启curl证书验证, 未调通情况可尝试添加该代码
+        // curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        // curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
+
 }
