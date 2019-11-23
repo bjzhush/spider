@@ -89,6 +89,9 @@ class spiderMBD extends Command
 
         $this->info('all finished');
 
+        $this->info('start to call updateColumns');
+        $this->call('updateColumns');
+
     }
 
     public function fetchJson($url)

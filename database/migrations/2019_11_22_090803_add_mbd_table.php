@@ -16,10 +16,26 @@ class AddMbdTable extends Migration
         Schema::create('mbd', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('mbd_id');
-            $table->json('data');
+            $table->text('data');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-            $table->index('mbd_id');
+            $table->string('date')->default('');
+
+            $table->string('userid')->default('');
+            $table->string('category')->default('');
+            $table->string('productname')->default('');
+            $table->string('productsize')->default('');
+            $table->string('productprice')->default('');
+            $table->string('productversion')->default('');
+            $table->string('viewcount')->default('');
+            $table->string('soldcount')->default('');
+            $table->string('allincome')->default('');
+            $table->string('agreevalue')->default('');
+            $table->string('rank')->default('');
+            $table->string('publishtime')->default('');
+
+            $table->integer('status')->default(0);
+
+            $table->index(['mbd_id', 'date']);
         });
     }
 
