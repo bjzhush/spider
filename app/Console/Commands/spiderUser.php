@@ -21,6 +21,7 @@ class spiderUser extends Command
      * @var string
      */
     protected $description = 'spider MBD user';
+    protected $guzzleClient = null;
 
     /**
      * Create a new command instance.
@@ -30,6 +31,11 @@ class spiderUser extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->guzzleClient = new GuzzleHttp\Client([
+            'Connection' => 'close',
+            CURLOPT_FORBID_REUSE => true,
+            CURLOPT_FRESH_CONNECT => true,
+        ]);
     }
 
     /**
@@ -116,7 +122,7 @@ class spiderUser extends Command
 
     public function fetchJson($url)
     {
-        $clinet = new GuzzleHttp\Client();
+        $clinet = $this->guzzleClient;
         $header = [
             'User-Agent' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36',
         ];
