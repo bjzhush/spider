@@ -134,7 +134,7 @@ class spiderUserArticle extends Command
             $data['publishtime'] = $row['publishtime'];
 
             if (empty($rowCheck)) {
-                $this->info('updating id ' . $row['id']);
+                $this->info('inserting id ' . $row['id']);
                 DB::table('mbd_user_data')->insert($data);
 
             } else {
