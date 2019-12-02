@@ -17,7 +17,7 @@ class CreateMbdUserDataTable extends Migration
 
             $table->increments('id');
             $table->integer('mbd_id');
-            $table->text('data');
+            $table->longText('data');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('date')->default('');
 
