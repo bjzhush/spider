@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Console\\Commands\\spiderMBD' => $baseDir . '/app/Console/Commands/spiderMBD.php',
+    'App\\Console\\Commands\\spiderUser' => $baseDir . '/app/Console/Commands/spiderUser.php',
+    'App\\Console\\Commands\\spiderUserArticle' => $baseDir . '/app/Console/Commands/spiderUserArticle.php',
     'App\\Console\\Commands\\updateColumns' => $baseDir . '/app/Console/Commands/updateColumns.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',

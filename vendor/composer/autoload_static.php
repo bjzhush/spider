@@ -433,6 +433,8 @@ class ComposerStaticInitb7cdef64b2e94c3d79a98a05c2979fa7
 
     public static $classMap = array (
         'App\\Console\\Commands\\spiderMBD' => __DIR__ . '/../..' . '/app/Console/Commands/spiderMBD.php',
+        'App\\Console\\Commands\\spiderUser' => __DIR__ . '/../..' . '/app/Console/Commands/spiderUser.php',
+        'App\\Console\\Commands\\spiderUserArticle' => __DIR__ . '/../..' . '/app/Console/Commands/spiderUserArticle.php',
         'App\\Console\\Commands\\updateColumns' => __DIR__ . '/../..' . '/app/Console/Commands/updateColumns.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
