@@ -54,8 +54,14 @@ class spiderUser extends Command
             $this->error('minID is bigger than maxId');
             return false;
         }
+        $startTime = time();
+        $count = 0;
 
         for ($id = $minId; $id <= $maxId; $id++) {
+            $count++;
+            $nowTime = time();
+            $avgCost = number_format(($nowTime - $startTime) / $count, 2, '.', '');
+            $this->info($count . ' processing, avg time cost ' . $avgCost);
             try {
                 $this->getUserInfo($id);
 
@@ -103,7 +109,7 @@ class spiderUser extends Command
                 $dataUpdate['has_article'] = 0;
             }
             //update
-            $this->info('updating row ,has article '.$dataUpdate['has_article']);
+            $this->info('updating row ,has article ' . $dataUpdate['has_article']);
             DB::table('mbd_user')->where('mbd_user_id', $userId)->update($dataUpdate);
         }
     }
